@@ -476,4 +476,9 @@ if __name__ == '__main__':
     print("  GET  /api/health - Health check")
     print("  WebSocket events: start_backtest, play, pause, step_forward, reset")
     print(f"\nServer will be available at http://localhost:{port}")
-    socketio.run(app, debug=False, host='0.0.0.0', port=port)
+    socketio.run(app, 
+                 debug=False, 
+                 host='0.0.0.0', 
+                 port=port, 
+                 allow_unsafe_werkzeug=True
+)
