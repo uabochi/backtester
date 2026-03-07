@@ -11,5 +11,5 @@ services:
   - type: web
     name: backtester-frontend
     runtime: static
-    buildCommand: cd frontend && npm install && chmod +x node_modules/.bin/vite && npm run build
+    buildCommand: cd frontend && node --version && npm --version && npm install && ls -la node_modules/.bin/vite && npm run build
     staticPublishPath: frontend/dist
