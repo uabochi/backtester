@@ -11,11 +11,8 @@ services:
   - type: web
     name: backtester-frontend
     runtime: static
-    buildCommand: cd frontend && npm install && npx vite build
+    buildCommand: cd frontend && npm install && npm run build
     staticPublishPath: frontend/dist
     envVars:
       - key: NODE_VERSION
         value: 18.17.0
-    envVars:
-      - key: VITE_API_URL
-        value: https://backtester-backend.onrender.com
