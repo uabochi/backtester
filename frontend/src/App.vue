@@ -1,65 +1,42 @@
 <template>
-  <div id="app">
-    <header class="header">
-      <h1>Trading Strategy Backtester</h1>
-      <p>Test and analyze trading strategies with historical data</p>
-    </header>
+  <div id="app" class="min-h-screen bg-gray-50 dark:bg-gray-900">
+    <!-- Navigation Header -->
+    <AppHeader v-if="isAuthenticated" />
 
-    <main class="main">
-      <BacktestPage />
+    <!-- Main Content -->
+    <main class="flex-1">
+      <router-view />
     </main>
+
+    <!-- Toast Notifications -->
+    <ToastContainer />
   </div>
 </template>
 
 <script setup>
-import BacktestPage from "./pages/BacktestPage.vue";
+import { computed, onMounted } from "vue";
+import { useAuthStore } from "@/stores/auth";
+import AppHeader from "@/components/layout/AppHeader.vue";
+import ToastContainer from "@/components/ui/ToastContainer.vue";
+
+const authStore = useAuthStore();
+
+const isAuthenticated = computed(() => authStore.isAuthenticated);
+
+onMounted(() => {
+  // Check for existing token on app load
+  const token = localStorage.getItem("token");
+  if (token) {
+    authStore.setToken(token);
+  }
+});
 </script>
 
 <style>
-* {
-  margin: 0;
-  padding: 0;
-  box-sizing: border-box;
-}
-
-body {
-  font-family:
-    -apple-system, BlinkMacSystemFont, "Segoe UI", "Roboto", "Oxygen", "Ubuntu",
-    "Cantarell", "Fira Sans", "Droid Sans", "Helvetica Neue", sans-serif;
-  -webkit-font-smoothing: antialiased;
-  -moz-osx-font-smoothing: grayscale;
-  background-color: #f5f5f5;
-  color: #333;
-}
-
+/* Global styles are now handled by Tailwind CSS */
 #app {
   min-height: 100vh;
-}
-
-.header {
-  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-  color: white;
-  padding: 2rem 0;
-  text-align: center;
-  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
-}
-
-.header h1 {
-  font-size: 2.5rem;
-  margin-bottom: 0.5rem;
-  font-weight: 700;
-}
-
-.header p {
-  font-size: 1.1rem;
-  opacity: 0.9;
-  max-width: 600px;
-  margin: 0 auto;
-}
-
-.main {
-  max-width: 1200px;
-  margin: 0 auto;
-  padding: 2rem;
+  display: flex;
+  flex-direction: column;
 }
 </style>

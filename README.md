@@ -1,52 +1,209 @@
-# Trading Strategy Backtester
+# Traders Casa - Professional Trading Backtester
 
-A complete event-driven backtesting framework with a modern Vue.js frontend and Flask API backend.
+A comprehensive trading strategy backtesting platform built with Vue.js 3 and Python Flask, featuring TradingView-like charts and real-time backtesting capabilities.
+
+## Features
+
+### Frontend (Vue.js 3)
+
+- **Modern SPA Architecture**: Built with Vue 3 Composition API, Vue Router, and Pinia state management
+- **TradingView-like Charts**: Professional charting with Lightweight Charts library
+- **Real-time Backtesting**: Live progress updates via Socket.io
+- **Multi-user Authentication**: JWT-based authentication system
+- **Professional UI**: Tailwind CSS with custom trading-focused design
+- **Interactive Strategy Builder**: Create and manage trading strategies with custom parameters
+
+### Backend (Python Flask)
+
+- **RESTful API**: Complete API for user management, strategies, and backtesting
+- **Real-time Communication**: Socket.io integration for live backtest progress
+- **Database Integration**: Ready for PostgreSQL/SQLite with SQLAlchemy
+- **Strategy Engine**: Modular strategy system with parameter optimization
 
 ## Project Structure
 
 ```
 backtester/
-├── backend/              # Python backtester (Flask API)
-│   ├── core/            # Event system
-│   ├── data/            # Data loading
-│   ├── strategy/        # Trading strategies
-│   ├── execution/       # Order execution
-│   ├── portfolio/       # Position management
-│   ├── performance/     # Metrics calculation
-│   ├── tests/           # Unit & integration tests
-│   ├── app.py           # Flask API server
-│   └── requirements.txt
-├── frontend/            # Vue.js frontend
+├── frontend/                 # Vue.js SPA
 │   ├── src/
-│   │   ├── components/  # UI components
-│   │   ├── pages/       # Page components
-│   │   ├── services/    # API client
-│   │   ├── stores/      # State management
-│   │   └── App.vue
-│   ├── package.json
-│   └── vite.config.js
-└── README.md
+│   │   ├── components/       # Reusable Vue components
+│   │   │   ├── layout/       # Layout components (Header, etc.)
+│   │   │   └── ui/           # UI components (Buttons, Modals, etc.)
+│   │   ├── views/            # Page components
+│   │   │   ├── Dashboard.vue # Main dashboard
+│   │   │   ├── Backtest.vue  # Backtesting interface
+│   │   │   ├── Strategies.vue # Strategy management
+│   │   │   ├── History.vue   # Backtest history
+│   │   │   ├── Login.vue     # Authentication
+│   │   │   ├── Register.vue  # User registration
+│   │   │   └── Profile.vue   # User profile management
+│   │   ├── stores/           # Pinia stores
+│   │   │   ├── auth.js       # Authentication state
+│   │   │   └── backtest.js   # Backtest state management
+│   │   ├── router.js         # Vue Router configuration
+│   │   └── main.js           # App entry point
+│   ├── package.json          # Frontend dependencies
+│   └── vite.config.js        # Vite configuration
+├── core/                     # Python backend core
+│   ├── engine.py             # Backtesting engine
+│   ├── event_queue.py        # Event system
+│   ├── event.py              # Event definitions
+│   └── ...
+├── strategies/               # Trading strategies
+│   ├── base_strategy.py      # Base strategy class
+│   ├── sma_crossover.py      # Example strategy
+│   └── ...
+├── data/                     # Data management
+├── portfolio/                # Portfolio management
+├── visualization/            # Chart generation
+└── main.py                   # Flask application entry point
 ```
 
-## Features
-
-### Backend (Python)
-
-- **Event-Driven Architecture**: Market events, signals, orders, fills
-- **Multiple Strategies**: SMA Crossover, RSI
-- **Performance Metrics**: Sharpe ratio, max drawdown, win rate
-- **Data Support**: CSV files (OHLCV format)
-- **REST API**: Flask-based API for frontend integration
-
-### Frontend (Vue.js)
-
-- **Modern UI**: Clean, responsive design
-- **Interactive Charts**: Equity curves with Chart.js
-- **Strategy Configuration**: Dynamic parameter forms
-- **Results Visualization**: Metrics cards, trade tables
-- **Real-time Updates**: Loading states and error handling
-
 ## Quick Start
+
+### Prerequisites
+
+- Node.js 16+ and npm
+- Python 3.8+
+- Git
+
+### Frontend Setup
+
+1. **Navigate to frontend directory:**
+
+   ```bash
+   cd frontend
+   ```
+
+2. **Install dependencies:**
+
+   ```bash
+   npm install
+   ```
+
+3. **Start development server:**
+
+   ```bash
+   npm run dev
+   ```
+
+4. **Build for production:**
+   ```bash
+   npm run build
+   ```
+
+### Backend Setup
+
+1. **Install Python dependencies:**
+
+   ```bash
+   pip install flask flask-socketio flask-cors python-socketio
+   ```
+
+2. **Run the Flask server:**
+   ```bash
+   python main.py
+   ```
+
+## Key Components
+
+### TradingChart.vue
+
+Professional chart component with:
+
+- Multiple timeframe support
+- Drawing tools (trend lines, rectangles, etc.)
+- Trade markers and annotations
+- Real-time data updates
+
+### Backtest.vue
+
+Comprehensive backtesting interface featuring:
+
+- Strategy parameter adjustment
+- Real-time progress tracking
+- Interactive charts
+- Performance metrics display
+
+### Strategies.vue
+
+Strategy management system with:
+
+- Create/edit/delete strategies
+- Parameter configuration
+- Strategy performance tracking
+
+### History.vue
+
+Backtest history and analytics with:
+
+- Filterable results
+- Detailed performance metrics
+- Re-run capabilities
+
+## API Endpoints
+
+### Authentication
+
+- `POST /api/auth/login` - User login
+- `POST /api/auth/register` - User registration
+- `POST /api/auth/logout` - User logout
+
+### Strategies
+
+- `GET /api/strategies` - List user strategies
+- `POST /api/strategies` - Create new strategy
+- `PUT /api/strategies/:id` - Update strategy
+- `DELETE /api/strategies/:id` - Delete strategy
+
+### Backtests
+
+- `GET /api/backtests` - List backtest history
+- `POST /api/backtests` - Start new backtest
+- `GET /api/backtests/:id` - Get backtest details
+- `DELETE /api/backtests/:id` - Delete backtest
+
+### User Management
+
+- `GET /api/user/profile` - Get user profile
+- `PUT /api/user/profile` - Update profile
+- `POST /api/user/change-password` - Change password
+
+## Deployment
+
+### Render Deployment
+
+1. Connect your GitHub repository to Render
+2. Set up two services:
+   - **Web Service**: For the Flask backend
+   - **Static Site**: For the Vue.js frontend
+3. Configure environment variables
+4. Deploy and enjoy!
+
+### Environment Variables
+
+```env
+FLASK_ENV=production
+SECRET_KEY=your-secret-key
+DATABASE_URL=your-database-url
+JWT_SECRET_KEY=your-jwt-secret
+```
+
+## Contributing
+
+1. Fork the repository
+2. Create a feature branch
+3. Make your changes
+4. Add tests if applicable
+5. Submit a pull request
+
+## License
+
+This project is licensed under the MIT License - see the LICENSE file for details.
+
+## Support
+
+For questions or support, please open an issue on GitHub or contact the development team.
 
 ### Prerequisites
 
