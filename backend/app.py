@@ -605,4 +605,4 @@ if __name__ == '__main__':
     print("  WebSocket events: start_backtest, play, pause, step_forward, reset")
     print(f"\nServer will be available at http://127.0.0.1:{port}")
     # Use regular Flask run instead of socketio.run for better CORS compatibility
-    app.run(debug=False, host='127.0.0.1', port=port)
+    app.run(debug=False, host='0.0.0.0', port=port)
