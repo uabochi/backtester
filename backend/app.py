@@ -165,6 +165,49 @@ def login():
     except Exception as e:
         return jsonify({'error': str(e)}), 500
 
+@app.route('/api/dashboard/stats', methods=['GET', 'OPTIONS'])
+def get_dashboard_stats():
+    """Get dashboard statistics"""
+    if request.method == 'OPTIONS':
+        return jsonify({}), 200
+
+    # Mock dashboard data
+    stats = {
+        'totalBacktests': 24,
+        'activeStrategies': 3,
+        'totalPnL': 1250.75,
+        'winRate': 68.5
+    }
+
+    recentBacktests = [
+        {
+            'id': 1,
+            'strategy': 'SMA Crossover',
+            'symbol': 'EURUSD',
+            'pnl': 245.50,
+            'date': '2024-01-15'
+        },
+        {
+            'id': 2,
+            'strategy': 'RSI Strategy',
+            'symbol': 'GBPUSD',
+            'pnl': -120.25,
+            'date': '2024-01-14'
+        },
+        {
+            'id': 3,
+            'strategy': 'Moving Average',
+            'symbol': 'USDJPY',
+            'pnl': 89.30,
+            'date': '2024-01-13'
+        }
+    ]
+
+    return jsonify({
+        'stats': stats,
+        'recentBacktests': recentBacktests
+    }), 200
+
 @app.route('/api/backtest', methods=['POST'])
 def run_backtest():
     """
