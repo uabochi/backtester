@@ -15,14 +15,26 @@ from werkzeug.security import generate_password_hash, check_password_hash
 app = Flask(__name__)
 CORS(app, resources={
     r"/api/*": {
-        "origins": ["http://localhost:5173", "http://localhost:5174", "http://127.0.0.1:5173", "http://127.0.0.1:5174"],
+        "origins": [
+            "http://localhost:5173", 
+            "http://localhost:5174", 
+            "http://127.0.0.1:5173", 
+            "http://127.0.0.1:5174",
+            "https://backtester-frontend.onrender.com"
+        ],
         "methods": ["GET", "POST", "PUT", "DELETE", "OPTIONS"],
         "allow_headers": ["Content-Type", "Authorization", "Accept"],
         "expose_headers": ["Content-Type", "Authorization"],
         "supports_credentials": True
     }
 })
-socketio = SocketIO(app, cors_allowed_origins=["http://localhost:5173", "http://localhost:5174", "http://127.0.0.1:5173", "http://127.0.0.1:5174"])
+socketio = SocketIO(app, cors_allowed_origins=[
+    "http://localhost:5173", 
+    "http://localhost:5174", 
+    "http://127.0.0.1:5173", 
+    "http://127.0.0.1:5174",
+    "https://backtester-frontend.onrender.com"
+])
 
 # JWT Secret Key (in production, use environment variable)
 app.config['SECRET_KEY'] = 'your-secret-key-change-in-production'
@@ -603,6 +615,6 @@ if __name__ == '__main__':
     print("  POST /api/auth/register - User registration")
     print("  POST /api/auth/login - User login")
     print("  WebSocket events: start_backtest, play, pause, step_forward, reset")
-    print(f"\nServer will be available at http://127.0.0.1:{port}")
-    # Use regular Flask run instead of socketio.run for better CORS compatibility
-    app.run(debug=False, host='0.0.0.0', port=port)
+    print(f"\nServer will be available at http://0.0.0.0:{port}")
+    # Use socketio.run for proper WebSocket support
+    socketio.run(app, debug=False, host='0.0.0.0', port=port)
