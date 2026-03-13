@@ -3,7 +3,8 @@ Flask API server for the backtester backend.
 Provides REST endpoints for frontend integration.
 """
 
-import eventlet
+import gevent.monkey
+gevent.monkey.patch_all()
 from flask import Flask, request, jsonify
 from flask_cors import CORS
 from flask_socketio import SocketIO, emit
