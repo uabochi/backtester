@@ -3,6 +3,7 @@ Flask API server for the backtester backend.
 Provides REST endpoints for frontend integration.
 """
 
+import eventlet
 from flask import Flask, request, jsonify
 from flask_cors import CORS
 from flask_socketio import SocketIO, emit
@@ -602,19 +603,3 @@ def process_next_bar(session, session_id):
         'positions': session['portfolio'].positions,
         'trade_log': session['trade_log'][-1] if session['trade_log'] else None
     }, room=session_id)
-
-if __name__ == '__main__':
-    port = int(os.environ.get('PORT', 5000))
-    print("Starting Backtester API server with SocketIO...")
-    print("Available endpoints:")
-    print("  POST /api/backtest - Run a backtest")
-    print("  GET  /api/strategies - List available strategies")
-    print("  GET  /api/data/files - List available data files")
-    print("  GET  /api/health - Health check")
-    print("  GET  /api/test - CORS test")
-    print("  POST /api/auth/register - User registration")
-    print("  POST /api/auth/login - User login")
-    print("  WebSocket events: start_backtest, play, pause, step_forward, reset")
-    print(f"\nServer will be available at http://0.0.0.0:{port}")
-    # Use socketio.run for proper WebSocket support
-    socketio.run(app, debug=False, host='0.0.0.0', port=port)
