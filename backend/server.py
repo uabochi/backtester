@@ -10,15 +10,15 @@ import time
 app = Flask(__name__)
 CORS(app, resources={
     r"/api/*": {
-        "origins": "http://localhost:5173, https://backtester-frontend.onrender.com",
+        "origins": "*",
         "methods": ["GET", "POST", "PUT", "DELETE", "OPTIONS"],
         "allow_headers": ["Content-Type", "Authorization", "Accept"],
         "expose_headers": ["Content-Type", "Authorization"],
         "supports_credentials": True
     }
 })
-# http://localhost:5173 https://backtester-frontend.onrender.com
-socketio = SocketIO(app, cors_allowed_origins=["http://localhost:5173", "https://backtester-frontend.onrender.com"])
+# *
+socketio = SocketIO(app, cors_allowed_origins=["*"], async_mode='threading')
 
 # JWT Secret Key
 app.config['SECRET_KEY'] = 'your-secret-key-change-in-production'
