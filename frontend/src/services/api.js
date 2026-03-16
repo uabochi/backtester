@@ -1,8 +1,6 @@
 import axios from "axios";
 import { io } from "socket.io-client";
 
-const API_BASE_URL = import.meta.env.VITE_API_URL || "http://localhost:5002";
-
 const api = axios.create({
   baseURL: API_BASE_URL,
   timeout: 30000, // 30 seconds for backtests
@@ -12,10 +10,14 @@ const api = axios.create({
 });
 
 // Socket.IO client
-const socket = io(API_BASE_URL);
+const socket = io(import.meta.env.VITE_API_URL || "http://localhost:5002", {
+  transports: ["websocket", "polling"],
+  withCredentials: true,
+  reconnectionAttempts: 5,
+});
 
 socket.on("connect", () => {
-  console.log("Connected to backend via Socket.IO");
+  console.log("Connected to backend via Socket.IO: ", socket.id);
 });
 
 socket.on("disconnect", () => {
