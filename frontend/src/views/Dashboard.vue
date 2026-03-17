@@ -297,6 +297,7 @@
 </template>
 
 <script setup>
+import api from "@/services/api";
 import { ref, computed, onMounted } from "vue";
 import { useAuthStore } from "@/stores/auth";
 import { useToast } from "vue-toastification";
@@ -324,19 +325,24 @@ const showTutorial = () => {
 onMounted(async () => {
   // Load dashboard data
   try {
-    const response = await fetch("/api/dashboard/stats", {
+    const response = await api.get("/api/dashboard/stats", {
       headers: {
         Authorization: `Bearer ${localStorage.getItem("token")}`,
       },
     });
 
-    if (response.ok) {
-      const data = await response.json();
-      stats.value = data.stats;
-      recentBacktests.value = data.recentBacktests;
-    }
+    // Axios returns data directly, so we use response.data
+    stats.value = response.data.stats;
+    recentBacktests.value = response.data.recentBacktests;
+
+    // if (response.ok) {
+    //   const data = await response.json();
+    //   stats.value = data.stats;
+    //   recentBacktests.value = data.recentBacktests;
+    // }
   } catch (error) {
     console.error("Failed to load dashboard data:", error);
+    toast.error("Could not connect to backend");
   }
 });
 </script>
