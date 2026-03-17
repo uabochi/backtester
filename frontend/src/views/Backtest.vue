@@ -408,6 +408,7 @@ import { ref, computed, reactive, onMounted } from "vue";
 import { useBacktestStore } from "@/stores/backtest";
 import { useToast } from "vue-toastification";
 import TradingChart from "@/components/charts/TradingChart.vue";
+import api from "@/services/api";
 
 const backtestStore = useBacktestStore();
 const toast = useToast();
@@ -487,17 +488,14 @@ const loadSampleChartData = () => {
 
 const loadStrategies = async () => {
   try {
-    const response = await fetch("/api/strategies", {
-      headers: {
-        Authorization: `Bearer ${localStorage.getItem("token")}`,
-      },
-    });
+    // Use the 'api' instance instead of 'fetch'
+    const response = await api.get("/api/strategies");
 
-    if (response.ok) {
-      strategies.value = await response.json();
-    }
+    // Axios automatically parses JSON and puts it in .data
+    strategies.value = response.data;
   } catch (error) {
     console.error("Failed to load strategies:", error);
+    toast.error("Could not load strategies from server.");
   }
 };
 

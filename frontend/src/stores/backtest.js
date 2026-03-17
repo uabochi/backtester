@@ -27,9 +27,17 @@ export const useBacktestStore = defineStore("backtest", () => {
   const connectSocket = () => {
     if (socket.value) return;
 
-    const API_BASE_URL =
-      import.meta.env.VITE_API_URL || "http://localhost:5002";
-    socket.value = io(API_BASE_URL);
+    const API_BASE_URL =api.defaults.baseURL || "http://localhost:5002";
+
+    ((socket.value = io(API_BASE_URL)),
+      {
+        transports: ["websocket", "polling"],
+        reconnectionAttempts: 5,
+      });
+
+    socket.value.on("connect", () => {
+      console.log("Connected to WebSocket successfully!");
+    });
 
     socket.value.on("backtest_progress", (data) => {
       progress.value = data.progress;

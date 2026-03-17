@@ -293,6 +293,7 @@
 <script setup>
 import { ref, reactive, onMounted } from "vue";
 import { useToast } from "vue-toastification";
+import api from "@/services/api";
 
 const toast = useToast();
 
@@ -314,15 +315,8 @@ const strategyForm = reactive({
 
 const loadStrategies = async () => {
   try {
-    const response = await fetch("/api/strategies", {
-      headers: {
-        Authorization: `Bearer ${localStorage.getItem("token")}`,
-      },
-    });
-
-    if (response.ok) {
-      strategies.value = await response.json();
-    }
+    const response = await api.get("/api/strategies");
+    strategies.value = response.data;
   } catch (error) {
     console.error("Failed to load strategies:", error);
     toast.error("Failed to load strategies");
@@ -331,31 +325,21 @@ const loadStrategies = async () => {
 
 const saveStrategy = async () => {
   isSaving.value = true;
-
   try {
-    const method = showEditModal.value ? "PUT" : "POST";
     const url = showEditModal.value
       ? `/api/strategies/${editingStrategy.value.id}`
       : "/api/strategies";
 
-    const response = await fetch(url, {
-      method,
-      headers: {
-        "Content-Type": "application/json",
-        Authorization: `Bearer ${localStorage.getItem("token")}`,
-      },
-      body: JSON.stringify(strategyForm),
-    });
+    // Use api.put or api.post based on the mode
+    const response = showEditModal.value
+      ? await api.put(url, strategyForm)
+      : await api.post(url, strategyForm);
 
-    if (response.ok) {
-      toast.success(
-        `Strategy ${showEditModal.value ? "updated" : "created"} successfully!`,
-      );
-      closeModals();
-      loadStrategies();
-    } else {
-      throw new Error("Failed to save strategy");
-    }
+    toast.success(
+      `Strategy ${showEditModal.value ? "updated" : "created"} successfully!`,
+    );
+    closeModals();
+    loadStrategies();
   } catch (error) {
     console.error("Failed to save strategy:", error);
     toast.error("Failed to save strategy");
