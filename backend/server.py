@@ -221,6 +221,7 @@ def get_strategies():
     return jsonify(strategies), 200
 
 @app.route('/api/backtest', methods=['POST', 'OPTIONS'])
+@app.route('/api/backtest', methods=['POST', 'OPTIONS'])
 def start_backtest():
     """Start a backtest simulation"""
     if request.method == 'OPTIONS':
@@ -231,21 +232,24 @@ def start_backtest():
         if not data:
             return jsonify({'error': 'No data provided'}), 400
 
-        # Validate required fields
+        # 1. Validate required fields
         required_fields = ['strategy', 'symbol', 'startDate', 'endDate', 'initialCapital']
-        for field in required_fields:
-            if field not in data:
-                return jsonify({'error': f'Missing required field: {field}'}), 400
+        missing = [f for f in required_fields if f not in data]
+        if missing:
+            return jsonify({'error': f'Missing fields: {", ".join(missing)}'}), 400
 
-        # Start backtest in a separate thread to avoid blocking
-        thread = threading.Thread(target=run_backtest_simulation, args=(data,))
-        thread.daemon = True
-        thread.start()
+        # 2. Start backtest using SocketIO's background task
+        # This is gevent-compatible and ensures emit() actually reaches the client
+        socketio.start_background_task(run_backtest_simulation, data)
 
-        return jsonify({'message': 'Backtest started successfully', 'status': 'running'}), 200
+        return jsonify({
+            'message': 'Backtest started successfully', 
+            'status': 'running'
+        }), 200
 
     except Exception as e:
-        return jsonify({'error': str(e)}), 500
+        app.logger.error(f"Backtest startup error: {str(e)}")
+        return jsonify({'error': 'Internal server error during initialization'}), 500
 
 def run_backtest_simulation(config):
     """Simulate a backtest with progress updates via Socket.IO"""
@@ -264,6 +268,7 @@ def run_backtest_simulation(config):
                 'progress': int((i + 1) / len(steps) * 100),
                 'step': step
             })
+            socketio.sleep(1)
             time.sleep(1)  # Simulate processing time
 
         # Generate mock results
