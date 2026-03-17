@@ -1,8 +1,10 @@
 import axios from "axios";
 import { io } from "socket.io-client";
 
+const API_URL = import.meta.env.VITE_API_URL || "http://localhost:5002";
+
 const api = axios.create({
-  baseURL: import.meta.env.VITE_API_URL || "http://localhost:5002",
+  baseURL: API_URL,
   timeout: 30000, // 30 seconds for backtests
   headers: {
     "Content-Type": "application/json",
@@ -10,7 +12,7 @@ const api = axios.create({
 });
 
 // Socket.IO client
-const socket = io(baseURL, {
+const socket = io(API_URL, {
   transports: ["websocket", "polling"],
   withCredentials: true,
   reconnectionAttempts: 5,
