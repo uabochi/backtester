@@ -18,7 +18,11 @@ CORS(app, resources={
     }
 })
 # *
-socketio = SocketIO(app, cors_allowed_origins=["*"], async_mode='threading')
+socketio = SocketIO(app, 
+                    cors_allowed_origins="*", 
+                    async_mode='gevent',  
+                    ping_timeout=60,
+                    ping_interval=25)
 
 # JWT Secret Key
 app.config['SECRET_KEY'] = 'your-secret-key-change-in-production'
